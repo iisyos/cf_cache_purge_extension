@@ -1,32 +1,57 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./App.css";
+import { getHashedDomain } from "./utils";
+import { StorageHandler } from "./services/storage-handler";
+import { AWSCredential } from "./types";
 
 function App() {
-  const [content, setContent] = useState<string>("");
-  const saveContent = () => {
-    // chromeの拡張機能のストレージに保存する
-    chrome.storage.sync.set({ key: content }, function () {
-      console.log("Value is set to " + content);
-    });
-  };
+  const [credential, setCredential] = useState<AWSCredential>();
+  const [storageKey, setStorageKey] = useState<string>();
+  const storageHandler = new StorageHandler();
+  useEffect(() => {
+    (async () => {
+      const storageKey = await getHashedDomain();
+      setStorageKey(storageKey);
+    })();
+  });
 
-  const retrieveContent = () => {
-    // chromeの拡張機能のストレージから取得する
-    chrome.storage.sync.get(["key"], function (result) {
-      console.log("Value currently is " + result.key);
-    });
-  };
+  if (!storageKey) return <div>loading...</div>;
+
   return (
     <div className="App">
       <header className="App-header">
         <input
           type="text"
-          className="text-center w-1/2 p-3 my-3 text-gray-600"
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
+          placeholder="access key"
+          className="text-gray-600 text-center"
+          onChange={(e) =>
+            setCredential({ ...credential, accessKey: e.target.value })
+          }
         />
-        <button onClick={() => saveContent()}>save</button>
-        <button onClick={retrieveContent}>retrieve</button>
+        <input
+          type="text"
+          placeholder="secret key"
+          className="text-gray-600 text-center"
+          onChange={(e) =>
+            setCredential({ ...credential, secretKey: e.target.value })
+          }
+        />
+        <button
+          onClick={async () =>
+            credential &&
+            (await storageHandler.setAccessKey({ storageKey, credential }))
+          }
+        >
+          save
+        </button>
+        <button
+          onClick={async () => {
+            const credential = await storageHandler.getAccessKey(storageKey);
+            console.log(credential);
+          }}
+        >
+          retrieve
+        </button>
       </header>
     </div>
   );

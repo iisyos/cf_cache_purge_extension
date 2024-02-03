@@ -6,7 +6,7 @@ const manifest = defineManifest({
   manifest_version: 3,
   name: "Open Bookmarks",
   version: "1.0.0",
-  permissions: ["storage"],
+  permissions: ["storage", "activeTab", "tabs"],
   action: {
     default_popup: "index.html",
   },
