@@ -1,42 +1,32 @@
 import { useState } from "react";
-import logo from "./logo.svg";
 import "./App.css";
 
 function App() {
-  const [count, setCount] = useState(0);
+  const [content, setContent] = useState<string>("");
+  const saveContent = () => {
+    // chromeの拡張機能のストレージに保存する
+    chrome.storage.sync.set({ key: content }, function () {
+      console.log("Value is set to " + content);
+    });
+  };
 
+  const retrieveContent = () => {
+    // chromeの拡張機能のストレージから取得する
+    chrome.storage.sync.get(["key"], function (result) {
+      console.log("Value currently is " + result.key);
+    });
+  };
   return (
     <div className="App">
       <header className="App-header">
-        <h1 className="text-3xl font-bold underline">Hello world!</h1>
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          <button type="button" onClick={() => setCount((count) => count + 1)}>
-            count is: {count}
-          </button>
-        </p>
-        <p>
-          Edit <code>App.tsx</code> and save to test HMR updates.
-        </p>
-        <p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-          {" | "}
-          <a
-            className="App-link"
-            href="https://vitejs.dev/guide/features.html"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Vite Docs
-          </a>
-        </p>
+        <input
+          type="text"
+          className="text-center w-1/2 p-3 my-3 text-gray-600"
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+        />
+        <button onClick={() => saveContent()}>save</button>
+        <button onClick={retrieveContent}>retrieve</button>
       </header>
     </div>
   );
