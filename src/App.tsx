@@ -1,21 +1,52 @@
 import { useState, useEffect } from "react";
 import "./App.css";
-import { getHashedDomain } from "./utils";
+import { getHashedDomain, canExecuteInvalidation } from "./utils";
 import { StorageHandler } from "./services/storage-handler";
-import { AWSCredential } from "./types";
+import { CloudfrontHandler } from "./services/cloudfront-handler";
+import { AWSCredentials, InvalidationParams } from "./types";
 
 function App() {
-  const [credential, setCredential] = useState<AWSCredential>();
+  const [credentials, setCredentials] = useState<Partial<AWSCredentials>>({});
+  const [invalidationParams, setInvalidationParams] = useState<
+    Partial<InvalidationParams>
+  >({});
   const [storageKey, setStorageKey] = useState<string>();
+
   const storageHandler = new StorageHandler();
+
   useEffect(() => {
     (async () => {
       const storageKey = await getHashedDomain();
       setStorageKey(storageKey);
+
+      const executeInvalidationParameter =
+        await storageHandler.getExecuteInvalidationParameter(storageKey);
+      if (executeInvalidationParameter) {
+        const { accessKeyId, secretAccessKey } = executeInvalidationParameter;
+        const { distributionId, paths } = executeInvalidationParameter;
+        const cloudfrontHandler = new CloudfrontHandler({
+          accessKeyId,
+          secretAccessKey,
+        });
+        await cloudfrontHandler.createInvalidation({ distributionId, paths });
+      }
     })();
   });
 
   if (!storageKey) return <div>loading...</div>;
+
+  const handleSave = async () => {
+    const executeInvalidationParameter = {
+      ...credentials,
+      ...invalidationParams,
+    };
+    if (storageKey && canExecuteInvalidation(executeInvalidationParameter)) {
+      await storageHandler.setExecuteInvalidationParameter({
+        storageKey,
+        executeInvalidationParameter,
+      });
+    }
+  };
 
   return (
     <div className="App">
@@ -25,7 +56,7 @@ function App() {
           placeholder="access key"
           className="text-gray-600 text-center"
           onChange={(e) =>
-            setCredential({ ...credential, accessKey: e.target.value })
+            setCredentials({ ...credentials, accessKeyId: e.target.value })
           }
         />
         <input
@@ -33,24 +64,30 @@ function App() {
           placeholder="secret key"
           className="text-gray-600 text-center"
           onChange={(e) =>
-            setCredential({ ...credential, secretKey: e.target.value })
+            setCredentials({ ...credentials, secretAccessKey: e.target.value })
+          }
+        />
+        <input
+          type="text"
+          placeholder="distribution id"
+          className="text-gray-600 text-center"
+          onChange={(e) =>
+            setInvalidationParams({
+              ...invalidationParams,
+              distributionId: e.target.value,
+            })
           }
         />
         <button
-          onClick={async () =>
-            credential &&
-            (await storageHandler.setAccessKey({ storageKey, credential }))
+          disabled={
+            !canExecuteInvalidation({
+              ...credentials,
+              ...invalidationParams,
+            })
           }
+          onClick={handleSave}
         >
           save
-        </button>
-        <button
-          onClick={async () => {
-            const credential = await storageHandler.getAccessKey(storageKey);
-            console.log(credential);
-          }}
-        >
-          retrieve
         </button>
       </header>
     </div>

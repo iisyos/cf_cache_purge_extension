@@ -1,25 +1,34 @@
-import { AWSCredential } from "../types";
+import {
+  AWSCredentials,
+  InvalidationParams,
+  ExecuteInvalidationParameter,
+} from "../types";
 
 export class StorageHandler {
-  async getAccessKey(storageKey: string): Promise<AWSCredential> {
+  async getExecuteInvalidationParameter(
+    storageKey: string
+  ): Promise<ExecuteInvalidationParameter | null> {
     return new Promise((resolve) => {
-      chrome.storage.local.get([storageKey], (result) => {
-        resolve(result[storageKey]);
+      chrome.storage.sync.get([storageKey], (result) => {
+        resolve(result[storageKey] as ExecuteInvalidationParameter);
       });
     });
   }
 
-  async setAccessKey({
+  async setExecuteInvalidationParameter({
     storageKey,
-    credential,
+    executeInvalidationParameter,
   }: {
     storageKey: string;
-    credential: AWSCredential;
+    executeInvalidationParameter: ExecuteInvalidationParameter;
   }): Promise<void> {
     return new Promise((resolve) => {
-      chrome.storage.sync.set({ [storageKey]: credential }, () => {
-        resolve();
-      });
+      chrome.storage.sync.set(
+        { [storageKey]: executeInvalidationParameter },
+        () => {
+          resolve();
+        }
+      );
     });
   }
 }

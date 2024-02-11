@@ -1,4 +1,11 @@
-export type AWSCredential = {
-  accessKey?: string;
-  secretKey?: string;
+export type AWSCredentials = {
+  accessKeyId: string;
+  secretAccessKey: string;
 };
+
+export type InvalidationParams = {
+  distributionId: string;
+  paths?: string[];
+};
+
+export type ExecuteInvalidationParameter = AWSCredentials & InvalidationParams;

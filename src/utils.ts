@@ -1,3 +1,5 @@
+import { AWSCredentials, ExecuteInvalidationParameter } from "./types";
+
 export const getHashedDomain = async () => {
   const promise = new Promise((resolve: (value: string) => void) => {
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
@@ -12,4 +14,14 @@ export const getHashedDomain = async () => {
     });
   });
   return await promise;
+};
+
+export const canExecuteInvalidation = (
+  executeInvalidationParameter: Partial<ExecuteInvalidationParameter>
+): executeInvalidationParameter is ExecuteInvalidationParameter => {
+  return (
+    !!executeInvalidationParameter.accessKeyId &&
+    !!executeInvalidationParameter.secretAccessKey &&
+    !!executeInvalidationParameter.secretAccessKey
+  );
 };
