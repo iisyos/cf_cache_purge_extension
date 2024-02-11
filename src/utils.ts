@@ -22,6 +22,6 @@ export const canExecuteInvalidation = (
   return (
     !!executeInvalidationParameter.accessKeyId &&
     !!executeInvalidationParameter.secretAccessKey &&
-    !!executeInvalidationParameter.secretAccessKey
+    !!executeInvalidationParameter.region
   );
 };

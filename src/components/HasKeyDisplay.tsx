@@ -20,6 +20,7 @@ export const HasKeyDisplay = ({
   const [credentials, setCredentials] = useState<Partial<AWSCredentials>>({
     accessKeyId: executeInvalidationParameter.accessKeyId,
     secretAccessKey: executeInvalidationParameter.secretAccessKey,
+    region: executeInvalidationParameter.region,
   });
   const [invalidationParams, setInvalidationParams] = useState<
     Partial<InvalidationParams>

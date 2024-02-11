@@ -11,7 +11,9 @@ import {
 import { HasKeyDisplay } from "./components/HasKeyDisplay";
 
 function App() {
-  const [credentials, setCredentials] = useState<Partial<AWSCredentials>>({});
+  const [credentials, setCredentials] = useState<Partial<AWSCredentials>>({
+    region: "ap-northeast-1",
+  });
   const [invalidationParams, setInvalidationParams] = useState<
     Partial<InvalidationParams>
   >({});
@@ -28,22 +30,25 @@ function App() {
 
       const executeInvalidationParameter =
         await storageHandler.getExecuteInvalidationParameter(storageKey);
-      if (executeInvalidationParameter) {
+      if (executeInvalidationParameter)
         setExecuteInvalidationParameter(executeInvalidationParameter);
-        const { accessKeyId, secretAccessKey, region } =
-          executeInvalidationParameter;
-        const { distributionId, paths } = executeInvalidationParameter;
-        const cloudfrontHandler = new CloudfrontHandler({
-          accessKeyId,
-          secretAccessKey,
-          region,
-        });
-        // cloudfrontHandler.createInvalidation({ distributionId, paths });
-      }
     })();
   });
 
   if (!storageKey) return <div>loading...</div>;
+
+  const purgeCache = async () => {
+    if (executeInvalidationParameter) {
+      const { accessKeyId, secretAccessKey, region, distributionId, paths } =
+        executeInvalidationParameter;
+      const cloudfrontHandler = new CloudfrontHandler({
+        accessKeyId,
+        secretAccessKey,
+        region,
+      });
+      await cloudfrontHandler.createInvalidation({ distributionId, paths });
+    }
+  };
 
   const handleSave = async () => {
     const executeInvalidationParameter = {
@@ -67,7 +72,7 @@ function App() {
             <h2>This domain is already configured</h2>
             <button
               className="bg-red-500 text-white-600 px-2 py-2 rounded hover:bg-red-700"
-              onClick={async () => {}}
+              onClick={purgeCache}
             >
               purge cache
             </button>
