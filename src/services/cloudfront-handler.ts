@@ -3,8 +3,9 @@ import {
   CreateInvalidationCommand,
 } from "@aws-sdk/client-cloudfront";
 import { AWSCredentials, InvalidationParams } from "../types";
+import { CacheHandlerInterface } from "../interfaces/cache-handler-interface";
 
-export class CloudfrontHandler {
+export class CloudfrontHandler implements CacheHandlerInterface {
   credentials: AWSCredentials;
   constructor(credentials: AWSCredentials) {
     this.credentials = credentials;

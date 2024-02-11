@@ -3,8 +3,9 @@ import {
   InvalidationParams,
   ExecuteInvalidationParameter,
 } from "../types";
+import { StorageHandlerInterface } from "../interfaces/storage-handler-interface";
 
-export class StorageHandler {
+export class StorageHandler implements StorageHandlerInterface {
   async getExecuteInvalidationParameter(
     storageKey: string
   ): Promise<ExecuteInvalidationParameter | null> {

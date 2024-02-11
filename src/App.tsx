@@ -3,7 +3,12 @@ import "./App.css";
 import { getHashedDomain, canExecuteInvalidation } from "./utils";
 import { StorageHandler } from "./services/storage-handler";
 import { CloudfrontHandler } from "./services/cloudfront-handler";
-import { AWSCredentials, InvalidationParams } from "./types";
+import {
+  AWSCredentials,
+  InvalidationParams,
+  ExecuteInvalidationParameter,
+} from "./types";
+import { HasKeyDisplay } from "./components/HasKeyDisplay";
 
 function App() {
   const [credentials, setCredentials] = useState<Partial<AWSCredentials>>({});
@@ -11,6 +16,8 @@ function App() {
     Partial<InvalidationParams>
   >({});
   const [storageKey, setStorageKey] = useState<string>();
+  const [executeInvalidationParameter, setExecuteInvalidationParameter] =
+    useState<ExecuteInvalidationParameter>();
 
   const storageHandler = new StorageHandler();
 
@@ -22,13 +29,14 @@ function App() {
       const executeInvalidationParameter =
         await storageHandler.getExecuteInvalidationParameter(storageKey);
       if (executeInvalidationParameter) {
+        setExecuteInvalidationParameter(executeInvalidationParameter);
         const { accessKeyId, secretAccessKey } = executeInvalidationParameter;
         const { distributionId, paths } = executeInvalidationParameter;
         const cloudfrontHandler = new CloudfrontHandler({
           accessKeyId,
           secretAccessKey,
         });
-        await cloudfrontHandler.createInvalidation({ distributionId, paths });
+        // await cloudfrontHandler.createInvalidation({ distributionId, paths });
       }
     })();
   });
@@ -51,44 +59,57 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <input
-          type="text"
-          placeholder="access key"
-          className="text-gray-600 text-center"
-          onChange={(e) =>
-            setCredentials({ ...credentials, accessKeyId: e.target.value })
-          }
-        />
-        <input
-          type="text"
-          placeholder="secret key"
-          className="text-gray-600 text-center"
-          onChange={(e) =>
-            setCredentials({ ...credentials, secretAccessKey: e.target.value })
-          }
-        />
-        <input
-          type="text"
-          placeholder="distribution id"
-          className="text-gray-600 text-center"
-          onChange={(e) =>
-            setInvalidationParams({
-              ...invalidationParams,
-              distributionId: e.target.value,
-            })
-          }
-        />
-        <button
-          disabled={
-            !canExecuteInvalidation({
-              ...credentials,
-              ...invalidationParams,
-            })
-          }
-          onClick={handleSave}
-        >
-          save
-        </button>
+        {!!executeInvalidationParameter ? (
+          <HasKeyDisplay
+            executeInvalidationParameter={executeInvalidationParameter}
+            storageHandler={storageHandler}
+            storageKey={storageKey}
+          />
+        ) : (
+          <>
+            <input
+              type="text"
+              placeholder="access key"
+              className="text-gray-600 text-center"
+              onChange={(e) =>
+                setCredentials({ ...credentials, accessKeyId: e.target.value })
+              }
+            />
+            <input
+              type="text"
+              placeholder="secret key"
+              className="text-gray-600 text-center"
+              onChange={(e) =>
+                setCredentials({
+                  ...credentials,
+                  secretAccessKey: e.target.value,
+                })
+              }
+            />
+            <input
+              type="text"
+              placeholder="distribution id"
+              className="text-gray-600 text-center"
+              onChange={(e) =>
+                setInvalidationParams({
+                  ...invalidationParams,
+                  distributionId: e.target.value,
+                })
+              }
+            />
+            <button
+              disabled={
+                !canExecuteInvalidation({
+                  ...credentials,
+                  ...invalidationParams,
+                })
+              }
+              onClick={handleSave}
+            >
+              save
+            </button>
+          </>
+        )}
       </header>
     </div>
   );
