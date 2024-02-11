@@ -28,7 +28,7 @@ export const HasKeyDisplay = ({
     paths: executeInvalidationParameter.paths,
   });
 
-  const handleSave = async () => {
+  const update = async () => {
     const executeInvalidationParameter = {
       ...credentials,
       ...invalidationParams,
@@ -135,8 +135,8 @@ export const HasKeyDisplay = ({
                   ...invalidationParams,
                 })
               }
-              className="bg-blue-500 text-white-600 px-4 py-2 rounded hover:bg-blue-700"
-              onClick={handleSave}
+              className="bg-blue-500 text-white-600 px-4 py-2 rounded hover:bg-blue-700 disabled:opacity-50"
+              onClick={update}
             >
               update
             </button>

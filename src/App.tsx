@@ -38,7 +38,7 @@ function App() {
           secretAccessKey,
           region,
         });
-        // await cloudfrontHandler.createInvalidation({ distributionId, paths });
+        // cloudfrontHandler.createInvalidation({ distributionId, paths });
       }
     })();
   });
@@ -55,6 +55,7 @@ function App() {
         storageKey,
         executeInvalidationParameter,
       });
+      setExecuteInvalidationParameter(executeInvalidationParameter);
     }
   };
 
@@ -64,6 +65,12 @@ function App() {
         {!!executeInvalidationParameter ? (
           <>
             <h2>This domain is already configured</h2>
+            <button
+              className="bg-red-500 text-white-600 px-2 py-2 rounded hover:bg-red-700"
+              onClick={async () => {}}
+            >
+              purge cache
+            </button>
             <HasKeyDisplay
               executeInvalidationParameter={executeInvalidationParameter}
               storageHandler={storageHandler}
@@ -122,7 +129,7 @@ function App() {
                   ...invalidationParams,
                 })
               }
-              className="bg-blue-500 text-white-600 px-4 py-2 rounded hover:bg-blue-700"
+              className="bg-blue-500 text-white-600 px-4 py-2 rounded hover:bg-blue-700 disabled:opacity-50"
               onClick={handleSave}
             >
               save
