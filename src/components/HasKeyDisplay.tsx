@@ -45,11 +45,11 @@ export const HasKeyDisplay = ({
     <>
       <details>
         <summary>Parameters</summary>
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-2">
           <div>
             <label
               htmlFor="access-key"
-              className="text-white-600 text-center block"
+              className="text-white-600 text-left block text-xs"
             >
               access key
             </label>
@@ -57,7 +57,7 @@ export const HasKeyDisplay = ({
               id="access-key"
               type="text"
               placeholder="access key"
-              className="text-gray-600 text-center"
+              className="text-gray-600 text-left pl-2"
               value={credentials.accessKeyId || ""}
               onChange={(e) =>
                 setCredentials({ ...credentials, accessKeyId: e.target.value })
@@ -67,7 +67,7 @@ export const HasKeyDisplay = ({
           <div>
             <label
               htmlFor="secret-key"
-              className="text-white-600 text-center block"
+              className="text-white-600 text-left block text-xs"
             >
               secret key
             </label>
@@ -75,7 +75,7 @@ export const HasKeyDisplay = ({
               id="secret-key"
               type="password"
               placeholder="secret key"
-              className="text-gray-600 text-center"
+              className="text-gray-600 text-left pl-2"
               value={credentials.secretAccessKey || ""}
               onChange={(e) =>
                 setCredentials({
@@ -87,8 +87,29 @@ export const HasKeyDisplay = ({
           </div>
           <div>
             <label
+              htmlFor="region"
+              className="text-white-600 text-left block text-xs"
+            >
+              region
+            </label>
+            <input
+              id="region"
+              type="text"
+              placeholder="ap-northeast-1"
+              className="text-gray-600 text-left pl-2"
+              value={credentials.region || "ap-northeast-1"}
+              onChange={(e) =>
+                setCredentials({
+                  ...credentials,
+                  region: e.target.value,
+                })
+              }
+            />
+          </div>
+          <div>
+            <label
               htmlFor="distribution-id"
-              className="text-white-600 text-center block"
+              className="text-white-600 text-left block text-xs"
             >
               distribution id
             </label>
@@ -96,7 +117,7 @@ export const HasKeyDisplay = ({
               id="distribution-id"
               type="text"
               placeholder="distribution id"
-              className="text-gray-600 text-center"
+              className="text-gray-600 text-left pl-2"
               value={invalidationParams.distributionId || ""}
               onChange={(e) =>
                 setInvalidationParams({

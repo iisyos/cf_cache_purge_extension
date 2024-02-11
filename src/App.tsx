@@ -30,11 +30,13 @@ function App() {
         await storageHandler.getExecuteInvalidationParameter(storageKey);
       if (executeInvalidationParameter) {
         setExecuteInvalidationParameter(executeInvalidationParameter);
-        const { accessKeyId, secretAccessKey } = executeInvalidationParameter;
+        const { accessKeyId, secretAccessKey, region } =
+          executeInvalidationParameter;
         const { distributionId, paths } = executeInvalidationParameter;
         const cloudfrontHandler = new CloudfrontHandler({
           accessKeyId,
           secretAccessKey,
+          region,
         });
         // await cloudfrontHandler.createInvalidation({ distributionId, paths });
       }
@@ -74,7 +76,7 @@ function App() {
             <input
               type="text"
               placeholder="access key"
-              className="text-gray-600 text-center"
+              className="text-gray-600 text-left pl-2"
               onChange={(e) =>
                 setCredentials({ ...credentials, accessKeyId: e.target.value })
               }
@@ -82,7 +84,7 @@ function App() {
             <input
               type="password"
               placeholder="secret key"
-              className="text-gray-600 text-center"
+              className="text-gray-600 text-left pl-2"
               onChange={(e) =>
                 setCredentials({
                   ...credentials,
@@ -92,8 +94,20 @@ function App() {
             />
             <input
               type="text"
+              placeholder="ap-northeast-1"
+              className="text-gray-600 text-left pl-2"
+              value="ap-northeast-1"
+              onChange={(e) =>
+                setCredentials({
+                  ...credentials,
+                  region: e.target.value,
+                })
+              }
+            />
+            <input
+              type="text"
               placeholder="distribution id"
-              className="text-gray-600 text-center"
+              className="text-gray-600 text-left pl-2"
               onChange={(e) =>
                 setInvalidationParams({
                   ...invalidationParams,
