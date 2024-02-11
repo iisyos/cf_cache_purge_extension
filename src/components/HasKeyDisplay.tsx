@@ -45,51 +45,81 @@ export const HasKeyDisplay = ({
     <>
       <details>
         <summary>Parameters</summary>
-        <label>access key</label>
-        <input
-          type="text"
-          placeholder="access key"
-          className="text-gray-600 text-center"
-          value={credentials.accessKeyId || ""}
-          onChange={(e) =>
-            setCredentials({ ...credentials, accessKeyId: e.target.value })
-          }
-        />
-        <label>secret key</label>
-        <input
-          type="password"
-          placeholder="secret key"
-          className="text-gray-600 text-center"
-          value={credentials.secretAccessKey || ""}
-          onChange={(e) =>
-            setCredentials({ ...credentials, secretAccessKey: e.target.value })
-          }
-        />
-        <label>distribution id</label>
-        <input
-          type="text"
-          placeholder="distribution id"
-          className="text-gray-600 text-center"
-          value={invalidationParams.distributionId || ""}
-          onChange={(e) =>
-            setInvalidationParams({
-              ...invalidationParams,
-              distributionId: e.target.value,
-            })
-          }
-        />
-        <div>
-          <button
-            disabled={
-              !canExecuteInvalidation({
-                ...credentials,
-                ...invalidationParams,
-              })
-            }
-            onClick={handleSave}
-          >
-            update
-          </button>
+        <div className="flex flex-col gap-4">
+          <div>
+            <label
+              htmlFor="access-key"
+              className="text-white-600 text-center block"
+            >
+              access key
+            </label>
+            <input
+              id="access-key"
+              type="text"
+              placeholder="access key"
+              className="text-gray-600 text-center"
+              value={credentials.accessKeyId || ""}
+              onChange={(e) =>
+                setCredentials({ ...credentials, accessKeyId: e.target.value })
+              }
+            />
+          </div>
+          <div>
+            <label
+              htmlFor="secret-key"
+              className="text-white-600 text-center block"
+            >
+              secret key
+            </label>
+            <input
+              id="secret-key"
+              type="password"
+              placeholder="secret key"
+              className="text-gray-600 text-center"
+              value={credentials.secretAccessKey || ""}
+              onChange={(e) =>
+                setCredentials({
+                  ...credentials,
+                  secretAccessKey: e.target.value,
+                })
+              }
+            />
+          </div>
+          <div>
+            <label
+              htmlFor="distribution-id"
+              className="text-white-600 text-center block"
+            >
+              distribution id
+            </label>
+            <input
+              id="distribution-id"
+              type="text"
+              placeholder="distribution id"
+              className="text-gray-600 text-center"
+              value={invalidationParams.distributionId || ""}
+              onChange={(e) =>
+                setInvalidationParams({
+                  ...invalidationParams,
+                  distributionId: e.target.value,
+                })
+              }
+            />
+          </div>
+          <div>
+            <button
+              disabled={
+                !canExecuteInvalidation({
+                  ...credentials,
+                  ...invalidationParams,
+                })
+              }
+              className="bg-blue-500 text-white-600 px-4 py-2 rounded hover:bg-blue-700"
+              onClick={handleSave}
+            >
+              update
+            </button>
+          </div>
         </div>
       </details>
     </>

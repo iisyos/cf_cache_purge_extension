@@ -60,13 +60,17 @@ function App() {
     <div className="App">
       <header className="App-header">
         {!!executeInvalidationParameter ? (
-          <HasKeyDisplay
-            executeInvalidationParameter={executeInvalidationParameter}
-            storageHandler={storageHandler}
-            storageKey={storageKey}
-          />
+          <>
+            <h2>This domain is already configured</h2>
+            <HasKeyDisplay
+              executeInvalidationParameter={executeInvalidationParameter}
+              storageHandler={storageHandler}
+              storageKey={storageKey}
+            />
+          </>
         ) : (
           <>
+            <h2>Configure this domain</h2>
             <input
               type="text"
               placeholder="access key"
@@ -104,6 +108,7 @@ function App() {
                   ...invalidationParams,
                 })
               }
+              className="bg-blue-500 text-white-600 px-4 py-2 rounded hover:bg-blue-700"
               onClick={handleSave}
             >
               save
