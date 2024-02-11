@@ -46,7 +46,11 @@ function App() {
         secretAccessKey,
         region,
       });
-      await cloudfrontHandler.createInvalidation({ distributionId, paths });
+      try {
+        await cloudfrontHandler.createInvalidation({ distributionId, paths });
+      } catch (e) {
+        alert(e);
+      }
     }
   };
 

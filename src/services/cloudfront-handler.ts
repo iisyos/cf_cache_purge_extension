@@ -19,9 +19,11 @@ export class CloudfrontHandler implements CacheHandlerInterface {
     paths: string[] | undefined;
   }): Promise<void> {
     const credentials = this.credentials;
-    console.log(credentials);
 
-    const client = new CloudFrontClient({ credentials });
+    const client = new CloudFrontClient({
+      credentials,
+      region: credentials.region,
+    });
 
     const command = new CreateInvalidationCommand({
       DistributionId: distributionId,
