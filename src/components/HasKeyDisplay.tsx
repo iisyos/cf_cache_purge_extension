@@ -45,6 +45,7 @@ export const HasKeyDisplay = ({
     <>
       <details>
         <summary>Parameters</summary>
+        <label>access key</label>
         <input
           type="text"
           placeholder="access key"
@@ -54,8 +55,9 @@ export const HasKeyDisplay = ({
             setCredentials({ ...credentials, accessKeyId: e.target.value })
           }
         />
+        <label>secret key</label>
         <input
-          type="text"
+          type="password"
           placeholder="secret key"
           className="text-gray-600 text-center"
           value={credentials.secretAccessKey || ""}
@@ -63,6 +65,7 @@ export const HasKeyDisplay = ({
             setCredentials({ ...credentials, secretAccessKey: e.target.value })
           }
         />
+        <label>distribution id</label>
         <input
           type="text"
           placeholder="distribution id"

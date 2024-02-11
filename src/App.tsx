@@ -76,7 +76,7 @@ function App() {
               }
             />
             <input
-              type="text"
+              type="password"
               placeholder="secret key"
               className="text-gray-600 text-center"
               onChange={(e) =>
