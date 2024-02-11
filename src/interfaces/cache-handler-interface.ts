@@ -1,3 +1,3 @@
 export interface CacheHandlerInterface {
-  createInvalidation(params: unknown): Promise<void>;
+  createInvalidation(params: unknown): Promise<unknown>;
 }

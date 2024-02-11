@@ -18,6 +18,7 @@ function App() {
     Partial<InvalidationParams>
   >({});
   const [storageKey, setStorageKey] = useState<string>();
+  const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const [executeInvalidationParameter, setExecuteInvalidationParameter] =
     useState<ExecuteInvalidationParameter>();
 
@@ -38,6 +39,7 @@ function App() {
   if (!storageKey) return <div>loading...</div>;
 
   const purgeCache = async () => {
+    setIsProcessing(true);
     if (executeInvalidationParameter) {
       const { accessKeyId, secretAccessKey, region, distributionId, paths } =
         executeInvalidationParameter;
@@ -47,7 +49,17 @@ function App() {
         region,
       });
       try {
-        await cloudfrontHandler.createInvalidation({ distributionId, paths });
+        let invalidationId = await cloudfrontHandler.createInvalidation({
+          distributionId,
+          paths,
+        });
+        chrome.runtime.sendMessage({
+          action: "waitPurgeComplete",
+          credentials: { accessKeyId, secretAccessKey, region },
+          distributionId,
+          invalidationId,
+        });
+        setIsProcessing(false);
       } catch (e) {
         alert(e);
       }
@@ -75,7 +87,8 @@ function App() {
           <>
             <h2>This domain is already configured</h2>
             <button
-              className="bg-red-500 text-white-600 px-2 py-2 rounded hover:bg-red-700"
+              disabled={isProcessing}
+              className="bg-red-500 text-white-600 px-2 py-2 rounded hover:bg-red-700 disabled:opacity-50"
               onClick={purgeCache}
             >
               purge cache
