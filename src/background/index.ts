@@ -38,7 +38,7 @@ chrome.commands.onCommand.addListener(async function (command) {
         type: "basic",
         iconUrl: chrome.runtime.getURL("icon48.png"),
         title: "No purge target",
-        message: "There is no purge target.",
+        message: "There is no purge target. Please register this site first",
         priority: 2,
       });
     }
