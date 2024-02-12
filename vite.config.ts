@@ -4,7 +4,7 @@ import { crx, defineManifest } from "@crxjs/vite-plugin";
 
 const manifest = defineManifest({
   manifest_version: 3,
-  name: "Open Bookmarks",
+  name: "CloudFront cache purge",
   version: "1.0.0",
   permissions: ["storage", "activeTab", "tabs", "notifications", "background"],
   background: {
