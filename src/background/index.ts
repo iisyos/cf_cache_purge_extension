@@ -33,6 +33,14 @@ chrome.commands.onCommand.addListener(async function (command) {
         distributionId,
         invalidationId!
       );
+    } else {
+      chrome.notifications.create({
+        type: "basic",
+        iconUrl: chrome.runtime.getURL("icon48.png"),
+        title: "No purge target",
+        message: "There is no purge target.",
+        priority: 2,
+      });
     }
   }
 });
