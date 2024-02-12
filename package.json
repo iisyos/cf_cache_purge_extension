@@ -1,5 +1,5 @@
 {
-  "name": "cf_cache_purge_extention",
+  "name": "cf_cache_purge_extension",
   "private": true,
   "version": "0.0.0",
   "scripts": {
