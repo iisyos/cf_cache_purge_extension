@@ -50,7 +50,7 @@ const checkPurgeComplete = async (
     // キャッシュ削除が完了したら通知
     chrome.notifications.create({
       type: "basic",
-      iconUrl: chrome.runtime.getURL("icon.jpg"),
+      iconUrl: chrome.runtime.getURL("icon48.png"),
       title: "Purge completed",
       message: `Purge for distribution ${distributionId} has been completed.`,
       priority: 2,

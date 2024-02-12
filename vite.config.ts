@@ -11,7 +11,10 @@ const manifest = defineManifest({
     service_worker: "src/background/index.ts",
   },
   icons: {
-    48: "icon.jpg",
+    16: "icon16.png",
+    32: "icon32.png",
+    48: "icon48.png",
+    128: "icon128.png",
   },
   commands: {
     hyper_reload: {
